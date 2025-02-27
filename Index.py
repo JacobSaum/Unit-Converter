@@ -31,6 +31,27 @@ unit_options = {
     "area": ["Square Meters", "Square Kilometers", "Square Feet", "Square Miles", "Acres", "Hectares"]
 }
 
+unit_symbol_options = {
+    "distance": {"Meters": "m","Feet": "ft","Inches": "in","Kilometers": "km","Miles": "mi","Yards": "yd","Centimeters": "cm","Millimeters": "mm","Nautical Miles": "nmi"
+    },
+    "mass": {"Kilograms": "kg","Pounds": "lbs","Ounces": "oz","Grams": "g","Tons": "t","Milligrams": "mg","Stones": "st"
+    },
+    "volume": {"Liters": "L","Gallons": "gal","Milliliters": "ml","Cubic Meters": "m^3","Cubic Feet": "ft^3","Cups": "c","Pints": "pt","Quarts": "qt","Fluid Ounces": "fl oz"
+    },
+    "temperature": {"Celsius": "°C","Fahrenheit": "°F","Kelvin": "K"
+    },
+    "time": {"Seconds": "s","Minutes": "mins","Hours": "hrs","Days": "days","Weeks": "weeks","Months": "months","Years": "yrs"
+    },
+    "speed": {"Meters per Second": "m/s","Kilometers per Hour": "km/hr","Miles per Hour": "mph","Knots": "kn"
+    },
+    "energy": {"Joules": "J","Kilojoules": "kJ","Calories": "cal","Kilowatt-Hours": "kW h"
+    },
+    "pressure": {"Pascals": "Pa","Bars": "bar","Atmospheres": "atm"
+    },
+    "area": {"Square Meters": "m^2", "Square Kilometers": "km^2","Square Feet": "ft^2","Square Miles": "mi^2","Acres": "ac","Hectares": "ha"
+    }
+}
+
 
 def update_unit_menus(*args):
     """Update the unit menus based on the selected radio button."""
@@ -43,21 +64,31 @@ def update_unit_menus(*args):
         unit_menu1.set(unit_options[selected_category][0])
         unit_menu2.set(unit_options[selected_category][1])  # Default to the second option for "Convert to"
 
+def errorMessage(errorMsg):
+        resultLabel.configure(text=errorMsg, text_color = "red", font = ("Roboto",16))  # Update the resultLabel
 
 def convert():
     convertFrom = unit_menu1.get()
     convertTo = unit_menu2.get()
+    error = False
+    errorMsg = ""
+    resultLabel.configure(text=errorMsg, text_color = "white", font = ("Roboto",24))
 
     try:
         value = float(entry1.get())
 
         if convertFrom == convertTo:
-            print("Error: Unit must be different!")
+            errorMsg = "Error: Unit must be different!"
+            error = True
         else:
             convertLength(convertFrom, convertTo, value)
 
     except ValueError:
-        print("Error: A number must be entered!")
+        errorMsg = "Error: A number must be entered!"
+        error = True
+
+    if error:
+        errorMessage(errorMsg)
      
 
 def convertLength(convertFrom, convertTo, value):
@@ -128,7 +159,7 @@ def convertLength(convertFrom, convertTo, value):
     },
 
     "area": {
-        "Square Meters": {"Square Kilometers": 0.000001, "Square Miles": 3.861e-7, "Square Feet": 10.7639, "Acres": 0.000247105, "Hectares": 0.0001},
+        "Square Meters": {"Square Kilometers": 0.000001, "Square Miles": 0.0000003861, "Square Feet": 10.7639, "Acres": 0.000247105, "Hectares": 0.0001},
         "Square Kilometers": {"Square Meters": 1000000, "Square Miles": 0.386102, "Square Feet": 10760000, "Acres": 247.105, "Hectares": 100},
         "Square Feet": {"Square Meters": 0.092903, "Square Kilometers": 0.000000092903, "Square Miles": 0.00000003587, "Acres": 0.000022957, "Hectares": 0.0000092903},
         "Square Miles": {"Square Meters": 2590000, "Square Kilometers": 2.58999, "Square Feet": 27880000, "Acres": 640, "Hectares": 258.999},
@@ -148,16 +179,20 @@ def convertLength(convertFrom, convertTo, value):
 
     decimalPoints = 4
     result_rounded = round_to_significant_figures(result, decimalPoints)
-    print(result_rounded)
+    resultText = str(result_rounded) + unit_symbol_options[category][convertTo]
+    print(resultText)
+    resultLabel.configure(text=resultText)  # Update the resultLabel
         
 
 
 root = customtkinter.CTk()
-root.geometry("600x400")
+root.geometry("700x570")
 
 # Create a frame to hold all the widgets
 frame = customtkinter.CTkFrame(master=root)
 frame.pack(pady=20, padx=20, fill="both", expand=True)
+
+frame.grid_rowconfigure(4, weight=1)  # Add a new row for the resultLabel
 
 # Add the "Unit Converter" label at the top
 label = customtkinter.CTkLabel(master=frame, text="Unit Converter", font=("Roboto", 42))
@@ -214,6 +249,9 @@ unit_menu2.grid(row=2, column=2, pady=10, padx=10, sticky="ew")
 convert_button = customtkinter.CTkButton(master=frame, text="Convert", command=convert)
 convert_button.grid(row=3, column=1, columnspan=2, pady=20, padx=10, sticky="ew")
 
+resultLabel = customtkinter.CTkLabel(master=frame, text="", font=("Roboto", 24))
+resultLabel.grid(row=4, column=1, columnspan=2, pady=2, padx=10, sticky="ew")
+
 # Configure the grid to expand properly
 frame.grid_columnconfigure(0, weight=1)
 frame.grid_columnconfigure(1, weight=2)
@@ -225,8 +263,5 @@ frame.grid_rowconfigure(3, weight=1)
 
 # Initialize the unit menus with the default category (distance)
 update_unit_menus()
-
-#if radio_var.get() == "Length" and convert_button.
-    #convertLength()
 
 root.mainloop()
