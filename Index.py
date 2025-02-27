@@ -26,9 +26,18 @@ def update_unit_menus(*args):
 def convert():
     convertFrom = unit_menu1.get()
     convertTo = unit_menu2.get()
-    value = float(entry1.get())
-    
-    convertLength(convertFrom, convertTo, value)
+    val = entry1.get()
+    if val.isnumeric():
+        value = float(val)
+
+        if convertFrom == convertTo:
+            print("Error: Unit must be different!")
+        else:
+            convertLength(convertFrom, convertTo, value)
+
+    else:
+        print("Error: A number must be entered!")
+     
 
 def convertLength(convertFrom, convertTo, value):
     category = radio_var.get()
