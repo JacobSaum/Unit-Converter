@@ -146,10 +146,10 @@ def convertLength(convertFrom, convertTo, value):
     },
 
     "energy": {
-        "Joules": {"Kilojoules": 0.001, "Calories": 0.239006, "Kilowatt-hours": 0.000000277778, "Electronvolts": 6242000000000000000},
-        "Kilojoules": {"Joules": 1000, "Calories": 239.006, "Kilowatt-hours": 0.000277778, "Electronvolts": 6242000000000000000000},
-        "Calories": {"Joules": 4.184, "Kilojoules": 0.004184, "Kilowatt-hours": 0.00000116222, "Electronvolts": 26110000000000000000},
-        "Kilowatt-hours": {"Joules": 3600000, "Kilojoules": 3600, "Calories": 860421, "Electronvolts": 22470000000000000000000000}
+        "Joules": {"Kilojoules": 0.001, "Calories": 0.239006, "Kilowatt-hours": 0.000000277778},
+        "Kilojoules": {"Joules": 1000, "Calories": 239.006, "Kilowatt-hours": 0.000277778},
+        "Calories": {"Joules": 4.184, "Kilojoules": 0.004184, "Kilowatt-hours": 0.00000116222},
+        "Kilowatt-hours": {"Joules": 3600000, "Kilojoules": 3600, "Calories": 860421}
     },
 
     "pressure": {
@@ -172,7 +172,7 @@ def convertLength(convertFrom, convertTo, value):
 
     if category == "temperature":
         # For temperature, call the lambda function
-        result = conversion_factors[category][convertFrom][convertTo](value)
+        result = conversion_factors[category][convertFrom][convertTo]
     else:
         # For other categories, multiply by the conversion factor
         result = value * conversion_factors[category][convertFrom][convertTo]
@@ -181,9 +181,7 @@ def convertLength(convertFrom, convertTo, value):
     result_rounded = round_to_significant_figures(result, decimalPoints)
     resultText = str(result_rounded) + unit_symbol_options[category][convertTo]
     print(resultText)
-    resultLabel.configure(text=resultText)  # Update the resultLabel
-        
-
+    resultLabel.configure(text=resultText, fg_color="gray20", corner_radius=10)  # Update the resultLabel with background color and rounded corners
 
 root = customtkinter.CTk()
 root.geometry("700x570")
@@ -205,31 +203,31 @@ radio_frame.grid(row=1, column=0, rowspan=3, padx=10, pady=10, sticky="nsew")
 radio_var = customtkinter.StringVar(value="distance")
 radio_var.trace("w", update_unit_menus)  # Call `update_unit_menus` when the radio button changes
 
-distance_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Distance", variable=radio_var, value="distance")
+distance_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Distance",font=("Calibri", 20), variable=radio_var, value="distance")
 distance_radio.pack(pady=10, padx=10, anchor="w")
 
-mass_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Mass", variable=radio_var, value="mass")
+mass_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Mass",font=("Calibri", 20), variable=radio_var, value="mass")
 mass_radio.pack(pady=10, padx=10, anchor="w")
 
-volume_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Volume", variable=radio_var, value="volume")
+volume_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Volume",font=("Calibri", 20), variable=radio_var, value="volume")
 volume_radio.pack(pady=10, padx=10, anchor="w")
 
-temperature_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Temperature", variable=radio_var, value="temperature")
+temperature_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Temperature",font=("Calibri", 20), variable=radio_var, value="temperature")
 temperature_radio.pack(pady=10, padx=10, anchor="w")
 
-time_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Time", variable=radio_var, value="time")
+time_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Time",font=("Calibri", 20), variable=radio_var, value="time")
 time_radio.pack(pady=10, padx=10, anchor="w")
 
-speed_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Speed", variable=radio_var, value="speed")
+speed_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Speed",font=("Calibri", 20), variable=radio_var, value="speed")
 speed_radio.pack(pady=10, padx=10, anchor="w")
 
-energy_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Energy", variable=radio_var, value="energy")
+energy_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Energy",font=("Calibri", 20), variable=radio_var, value="energy")
 energy_radio.pack(pady=10, padx=10, anchor="w")
 
-pressure_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Pressure", variable=radio_var, value="pressure")
+pressure_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Pressure",font=("Calibri", 20), variable=radio_var, value="pressure")
 pressure_radio.pack(pady=10, padx=10, anchor="w")
 
-area_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Area", variable=radio_var, value="area")
+area_radio = customtkinter.CTkRadioButton(master=radio_frame, text="Area",font=("Calibri", 20), variable=radio_var, value="area")
 area_radio.pack(pady=10, padx=10, anchor="w")
 
 # Add the value entry box and option menus on the right two-thirds of the screen
@@ -247,9 +245,9 @@ unit_menu2.grid(row=2, column=2, pady=10, padx=10, sticky="ew")
 
 # Add the convert button at the bottom
 convert_button = customtkinter.CTkButton(master=frame, text="Convert", command=convert)
-convert_button.grid(row=3, column=1, columnspan=2, pady=20, padx=10, sticky="ew")
+convert_button.grid(row=3, column=1, columnspan=2, pady=2, padx=10, sticky="ew")
 
-resultLabel = customtkinter.CTkLabel(master=frame, text="", font=("Roboto", 24))
+resultLabel = customtkinter.CTkLabel(master=frame, text="", font=("Roboto", 24), fg_color="gray20", corner_radius=7)
 resultLabel.grid(row=4, column=1, columnspan=2, pady=2, padx=10, sticky="ew")
 
 # Configure the grid to expand properly
@@ -260,6 +258,7 @@ frame.grid_rowconfigure(0, weight=1)
 frame.grid_rowconfigure(1, weight=1)
 frame.grid_rowconfigure(2, weight=1)
 frame.grid_rowconfigure(3, weight=1)
+frame.grid_rowconfigure(4, weight=1)
 
 # Initialize the unit menus with the default category (distance)
 update_unit_menus()
